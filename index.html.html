@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enter Me | Next-Gen Cyberpunk Gaming Console</title>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts: Inter & Orbitron for Cyberpunk Look -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Orbitron:wght@500;700;900&display=swap" rel="stylesheet">
+
+    <!-- Custom Tailwind Theme Configuration -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        cyberDark: '#0a0a0c',
+                        cyberDarker: '#050507',
+                        cyberCard: '#12131a',
+                        cyberBorder: '#1f2233',
+                        neonBlue: '#00f3ff',
+                        neonPurple: '#b000ff',
+                        neonGreen: '#00ff66'
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        cyber: ['Orbitron', 'sans-serif']
+                    },
+                    boxShadow: {
+                        'neon-blue': '0 0 20px rgba(0, 243, 255, 0.4)',
+                        'neon-purple': '0 0 20px rgba(176, 0, 255, 0.4)',
+                        'neon-green': '0 0 20px rgba(0, 255, 102, 0.4)',
+                        'glow-lg': '0 0 35px rgba(0, 243, 255, 0.2)'
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Custom CSS for Cyberpunk Scanlines & Glows -->
+    <style>
+        body {
+            background-color: #0a0a0c;
+            color: #f3f4f6;
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+        }
+        .cyber-title {
+            font-family: 'Orbitron', sans-serif;
+        }
+        /* Scanline overlay effect */
+        .scanlines {
+            background: linear-gradient(
+                to bottom,
+                rgba(255,255,255,0),
+                rgba(255,255,255,0) 50%,
+                rgba(0, 0, 0, 0.3) 50%,
+                rgba(0, 0, 0, 0.3)
+            );
+            background-size: 100% 4px;
+        }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0a0a0c;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1f2233;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #00f3ff;
+        }
+    </style>
+</head>
+<body class="bg-cyberDark text-gray-100 antialiased selection:bg-neonBlue selection:text-cyberDark">
+
+    <!-- ========================================== -->
+    <!-- USB PLUG-IN SPLASH SCREEN / BOOT SEQUENCE  -->
+    <!-- ========================================== -->
+    <div id="splash-screen" class="fixed inset-0 z-50 bg-cyberDarker flex flex-col items-center justify-center p-4 transition-opacity duration-700">
+        <div class="relative w-full max-w-lg text-center bg-cyberCard border border-cyberBorder p-8 rounded-2xl shadow-neon-blue">
+            <!-- Glowing Grid Background Accent -->
+            <div class="absolute inset-0 bg-gradient-to-r from-neonBlue/5 via-neonPurple/5 to-neonGreen/5 rounded-2xl pointer-events-none"></div>
+            
+            <div class="relative z-10">
+                <!-- USB Animation Icon -->
+                <div class="w-20 h-20 mx-auto mb-6 bg-cyberDark border-2 border-neonBlue rounded-2xl flex items-center justify-center shadow-neon-blue animate-pulse">
+                    <i class="fa-solid fa-usb text-4xl text-neonBlue"></i>
+                </div>
+
+                <h1 class="cyber-title text-2xl md:text-3xl font-black tracking-wider text-white mb-2">
+                    ENTER ME <span class="text-neonBlue">CONSOLE</span>
+                </h1>
+                <p id="splash-status" class="text-sm text-gray-400 font-mono mb-6">Initializing Quantum SSD & Peripheral Link...</p>
+
+                <!-- Progress Bar -->
+                <div class="w-full bg-cyberBorder h-3 rounded-full overflow-hidden mb-6 p-0.5 border border-neonBlue/30">
+                    <div id="splash-progress" class="bg-gradient-to-r from-neonBlue via-neonPurple to-neonGreen h-full rounded-full transition-all duration-300 w-0"></div>
+                </div>
+
+                <!-- Action Controls for Splash -->
+                <div class="flex flex-col sm:flex-row gap-3 justify-center">
+                    <button onclick="dismissSplash()" class="px-6 py-3 bg-neonBlue text-cyberDark font-cyber font-bold text-sm rounded-xl shadow-neon-blue hover:bg-white transition-all transform hover:scale-105">
+                        <i class="fa-solid fa-power-off mr-2"></i>Boot System Now
+                    </button>
+                    <button onclick="dismissSplash()" class="px-6 py-3 bg-transparent border border-cyberBorder text-gray-300 hover:text-white font-cyber text-sm rounded-xl hover:border-neonPurple transition-all">
+                        Skip Animation
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- TOP NAVIGATION BAR (Sticky)                -->
+    <!-- ========================================== -->
+    <header class="sticky top-0 z-40 bg-cyberDark/90 backdrop-blur-md border-b border-cyberBorder">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <!-- Brand Logo -->
+            <a href="#" class="flex items-center gap-3 group">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-neonBlue to-neonPurple p-0.5 shadow-neon-blue flex items-center justify-center transform group-hover:rotate-12 transition-transform">
+                    <div class="w-full h-full bg-cyberDark rounded-[10px] flex items-center justify-center">
+                        <i class="fa-solid fa-gamepad text-neonBlue text-lg"></i>
+                    </div>
+                </div>
+                <span class="cyber-title font-black text-xl tracking-wider text-white">
+                    ENTER <span class="text-neonBlue">ME</span>
+                </span>
+            </a>
+
+            <!-- Desktop Navigation Links -->
+            <nav class="hidden md:flex items-center gap-8 font-medium text-sm text-gray-300">
+                <a href="#home" class="hover:text-neonBlue transition-colors">Home</a>
+                <a href="#product" class="hover:text-neonBlue transition-colors">Store & Buy</a>
+                <a href="#specs" class="hover:text-neonBlue transition-colors">Specs</a>
+                <a href="#guides" class="hover:text-neonBlue transition-colors">Setup & Guides</a>
+                <a href="#support" class="hover:text-neonBlue transition-colors">Support & Policies</a>
+                <a href="#contact" class="hover:text-neonBlue transition-colors">Contact Us</a>
+            </nav>
+
+            <!-- Header Right Action -->
+            <div class="hidden md:flex items-center gap-4">
+                <button onclick="triggerSplashAgain()" title="Re-run Boot Sequence" class="p-2.5 rounded-xl bg-cyberCard border border-cyberBorder text-gray-400 hover:text-neonBlue hover:border-neonBlue transition-all">
+                    <i class="fa-solid fa-rotate"></i>
+                </button>
+                <a href="#product" class="px-5 py-2.5 bg-gradient-to-r from-neonBlue to-neonPurple text-cyberDark font-cyber font-bold text-xs uppercase tracking-wider rounded-xl shadow-neon-blue hover:opacity-95 transition-all">
+                    Get Console
+                </a>
+            </div>
+
+            <!-- Mobile Menu Toggle Button -->
+            <button id="mobile-menu-btn" class="md:hidden text-gray-300 hover:text-neonBlue p-2 text-xl">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+        </div>
+
+        <!-- Mobile Menu Drawer -->
+        <div id="mobile-menu" class="hidden md:hidden bg-cyberCard border-b border-cyberBorder px-6 py-4 space-y-4">
+            <a href="#home" class="block text-gray-300 hover:text-neonBlue py-1 font-medium">Home</a>
+            <a href="#product" class="block text-gray-300 hover:text-neonBlue py-1 font-medium">Store & Buy</a>
+            <a href="#specs" class="block text-gray-300 hover:text-neonBlue py-1 font-medium">Specs</a>
+            <a href="#guides" class="block text-gray-300 hover:text-neonBlue py-1 font-medium">Setup & Guides</a>
+            <a href="#support" class="block text-gray-300 hover:text-neonBlue py-1 font-medium">Support & Policies</a>
+            <a href="#contact" class="block text-gray-300 hover:text-neonBlue py-1 font-medium">Contact Us</a>
+            <div class="pt-2 flex gap-3">
+                <a href="#product" class="flex-1 text-center py-2.5 bg-neonBlue text-cyberDark font-bold rounded-xl text-xs uppercase font-cyber">Get Console</a>
+                <button onclick="triggerSplashAgain()" class="px-4 py-2.5 bg-cyberDark border border-cyberBorder text-neonBlue rounded-xl"><i class="fa-solid fa-rotate"></i></button>
+            </div>
+        </div>
+    </header>
+
+    <!-- ========================================== -->
+    <!-- DYNAMIC ANNOUNCEMENT & WARNING BAR         -->
+    <!-- ========================================== -->
+    <!-- EDITABLE CONFIG COMMENT: Update the notice below for future sales alerts or announcements -->
+    <div class="bg-gradient-to-r from-neonPurple/20 via-neonBlue/20 to-neonGreen/20 border-y border-neonBlue/30 py-2.5 px-4 text-center relative overflow-hidden">
+        <div class="max-w-7xl mx-auto flex items-center justify-center gap-3 text-xs sm:text-sm font-medium text-gray-200">
+            <span class="flex h-2 w-2 relative">
+              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-neonGreen opacity-75"></span>
+              <span class="relative inline-flex rounded-full h-2 w-2 bg-neonGreen"></span>
+            </span>
+            <i class="fa-solid fa-triangle-exclamation text-neonBlue"></i>
+            <span><strong>CRITICAL BUYER NOTICE:</strong> Please carefully read <a href="#guides" class="text-neonBlue underline hover:text-white">"How to Get Games"</a> and <a href="#guides" class="text-neonBlue underline hover:text-white">"How to Set Up Games on Console"</a> before making any purchase.</span>
+        </div>
+    </div>
+
+    <main>
+        <!-- ========================================== -->
+        <!-- REFINED HERO SECTION                       -->
+        <!-- ========================================== -->
+        <section id="home" class="relative pt-16 pb-24 md:py-32 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto flex flex-col lg:flex-row items-center gap-12">
+            <!-- Background Glow Decor -->
+            <div class="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-neonBlue/10 rounded-full blur-[120px] pointer-events-none"></div>
+            
+            <div class="flex-1 text-center lg:text-left z-10">
+                <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-cyberCard border border-cyberBorder text-xs text-neonBlue font-mono mb-6 shadow-neon-blue">
+                    <i class="fa-solid fa-bolt"></i> NEXT-GEN HARDWARE ARCHITECTURE V4.5
+                </div>
+                <h1 class="cyber-title text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight text-white leading-tight mb-6">
+                    DOMINATE REALITY WITH <span class="text-transparent bg-clip-text bg-gradient-to-r from-neonBlue via-neonPurple to-neonGreen">QUANTUM SPEED</span>
+                </h1>
+                <p class="text-gray-400 text-base sm:text-lg mb-8 max-w-2xl mx-auto lg:mx-0">
+                    Experience ultra-low latency, native 8K gaming, quantum speed SSD streaming, and immersive haptic feedback engineered for hardcore elite gamers.
+                </p>
+                
+                <!-- Two Action Buttons Only -->
+                <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+                    <a href="#product" class="px-8 py-4 bg-gradient-to-r from-neonBlue to-neonPurple text-cyberDark font-cyber font-black text-sm uppercase tracking-wider rounded-xl shadow-neon-blue hover:opacity-95 transform hover:-translate-y-0.5 transition-all flex items-center justify-center gap-3">
+                        <i class="fa-solid fa-cart-shopping"></i> Buy Now
+                    </a>
+                    <!-- External Game Library Link -->
+                    <a href="https://example.com/game-library" target="_blank" rel="noopener noreferrer" class="px-8 py-4 bg-cyberCard border border-cyberBorder hover:border-neonGreen text-white font-cyber font-bold text-sm uppercase tracking-wider rounded-xl shadow-lg hover:shadow-neon-green transition-all flex items-center justify-center gap-3">
+                        <i class="fa-solid fa-download text-neonGreen"></i> Download Games <i class="fa-solid fa-arrow-up-right-from-square text-xs opacity-70"></i>
+                    </a>
+                </div>
+
+                <!-- Trust Badges -->
+                <div class="mt-12 pt-8 border-t border-cyberBorder grid grid-cols-3 gap-4 text-center lg:text-left">
+                    <div>
+                        <div class="cyber-title text-2xl font-bold text-neonBlue">0.01ms</div>
+                        <div class="text-xs text-gray-400">Response Latency</div>
+                    </div>
+                    <div>
+                        <div class="cyber-title text-2xl font-bold text-neonPurple">8K HDR</div>
+                        <div class="text-xs text-gray-400">Ultra Fidelity</div>
+                    </div>
+                    <div>
+                        <div class="cyber-title text-2xl font-bold text-neonGreen">4TB</div>
+                        <div class="text-xs text-gray-400">Quantum SSD</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Hero Console Showcase Graphic/Visual -->
+            <div class="flex-1 w-full max-w-lg lg:max-w-none relative z-10">
+                <div class="relative bg-cyberCard border border-cyberBorder rounded-3xl p-6 shadow-glow-lg overflow-hidden group">
+                    <div class="absolute inset-0 bg-gradient-to-br from-neonBlue/10 via-transparent to-neonPurple/15"></div>
+                    <!-- Console Image Mockup with Fallback -->
+                    <div class="relative rounded-2xl bg-cyberDarker border border-cyberBorder overflow-hidden aspect-video flex items-center justify-center">
+                        <img src="https://placehold.co/800x450/12131a/00f3ff?text=ENTER+ME+CONSOLE+UNIT" onerror="this.src='https://placehold.co/800x450/12131a/00f3ff?text=Console+Preview'" alt="Enter Me Console" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        <!-- Play Demo Video Button Overlay -->
+                        <button onclick="openVideoModal('https://www.youtube.com/embed/dQw4w9WgXcQ', 'Enter Me Console Official Trailer')" class="absolute inset-0 bg-black/40 flex items-center justify-center group-hover:bg-black/20 transition-all">
+                            <div class="w-16 h-16 rounded-full bg-neonBlue text-cyberDark flex items-center justify-center text-xl shadow-neon-blue transform group-hover:scale-110 transition-transform">
+                                <i class="fa-solid fa-play ml-1"></i>
+                            </div>
+                        </button>
+                    </div>
+                    <div class="mt-4 flex items-center justify-between text-xs font-mono text-gray-400">
+                        <span><i class="fa-solid fa-microchip text-neonBlue mr-1"></i> Neural Engine Active</span>
+                        <span class="text-neonGreen"><i class="fa-solid fa-circle text-[8px] mr-1"></i> Ready to Ship</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- KEY HARDWARE SPECS GRID (Modular Section)  -->
+        <!-- ========================================== -->
+        <section id="specs" class="py-20 bg-cyberDarker border-y border-cyberBorder">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center max-w-3xl mx-auto mb-16">
+                    <div class="inline-block px-3 py-1 rounded-full bg-cyberCard border border-cyberBorder text-neonPurple text-xs font-mono mb-3">
+                        HARDWARE SPECIFICATIONS
+                    </div>
+                    <h2 class="cyber-title text-3xl sm:text-4xl font-black text-white">
+                        ENGINEERED FOR <span class="text-neonBlue">SUPREMACY</span>
+                    </h2>
+                    <p class="text-gray-400 text-sm mt-2">Each hardware container is independently configured for peak gaming performance.</p>
+                </div>
+
+                <!-- Specs Container Grid (Modular Cards) -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    
+                    <!-- Spec Card 1: Frame Rate -->
+                    <div class="bg-cyberCard border border-cyberBorder hover:border-neonBlue p-6 rounded-2xl transition-all hover:shadow-neon-blue group">
+                        <div class="w-12 h-12 rounded-xl bg-cyberDark border border-cyberBorder flex items-center justify-center text-neonBlue mb-4 group-hover:scale-110 transition-transform">
+                            <i class="fa-solid fa-gauge-high text-xl"></i>
+                        </div>
+                        <h3 class="cyber-title text-xl font-bold text-white mb-1">120 FPS</h3>
+                        <p class="text-xs text-neonBlue font-mono mb-3">Ultra-Smooth Motion</p>
+                        <p class="text-gray-400 text-sm">Zero stutter high refresh rate rendering ensuring silky smooth competitive gameplay.</p>
+                    </div>
+
+                    <!-- Spec Card 2: Resolution -->
+                    <div class="bg-cyberCard border border-cyberBorder hover:border-neonPurple p-6 rounded-2xl transition-all hover:shadow-neon-purple group">
+                        <div class="w-12 h-12 rounded-xl bg-cyberDark border border-cyberBorder flex items-center justify-center text-neonPurple mb-4 group-hover:scale-110 transition-transform">
+                            <i class="fa-solid fa-tv text-xl"></i>
+                        </div>
+                        <h3 class="cyber-title text-xl font-bold text-white mb-1">8K HDR</h3>
+                        <p class="text-xs text-neonPurple font-mono mb-3">Quantum Visuals</p>
+                        <p class="text-gray-400 text-sm">Breathtaking pixel clarity and hyper-realistic lighting with advanced ray tracing.</p>
+                    </div>
+
+                    <!-- Spec Card 3: Response Time -->
+                    <div class="bg-cyberCard border border-cyberBorder hover:border-neonGreen p-6 rounded-2xl transition-all hover:shadow-neon-green group">
+                        <div class="w-12 h-12 rounded-xl bg-cyberDark border border-cyberBorder flex items-center justify-center text-neonGreen mb-4 group-hover:scale-110 transition-transform">
+                            <i class="fa-solid fa-bolt-lightning text-xl"></i>
+                        </div>
+                        <h3 class="cyber-title text-xl font-bold text-white mb-1">0.01ms</h3>
+                        <p class="text-xs text-neonGreen font-mono mb-3">Instantaneous Input</p>
+                        <p class="text-gray-400 text-sm">Direct neural controller link eliminates input lag for instantaneous combat reactions.</p>
+                    </div>
+
+                    <!-- Spec Card 4: Storage -->
+                    <div class="bg-cyberCard border border-cyberBorder hover:border-neonBlue p-6 rounded-2xl transition-all hover:shadow-neon-blue group">
+                        <div class="w-12 h-12 rounded-xl bg-cyberDark border border-cyberBorder flex items-center justify-center text-neonBlue mb-4 group-hover:scale-110 transition-transform">
+                            <i class="fa-solid fa-hard-drive text-xl"></i>
+                        </div>
+                        <h3 class="cyber-title text-xl font-bold text-white mb-1">4TB SSD</h3>
+                        <p class="text-xs text-neonBlue font-mono mb-3">Quantum Streaming</p>
+                        <p class="text-gray-400 text-sm">Massive ultra-fast storage array for instant game loading and vast library capacity.</p>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- PRODUCT PURCHASE & CHECKOUT SECTION        -->
+        <!-- ========================================== -->
+        <section id="product" class="py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+            <div class="bg-cyberCard border border-cyberBorder rounded-3xl p-8 sm:p-12 shadow-glow-lg relative overflow-hidden">
+                <div class="absolute -right-20 -bottom-20 w-96 h-96 bg-neonBlue/10 rounded-full blur-[100px] pointer-events-none"></div>
+                
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                    <div>
+                        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyberDark border border-cyberBorder text-xs text-neonGreen font-mono mb-4">
+                            <i class="fa-solid fa-box-open"></i> BUNDLE & CONSOLE PACKAGE
+                        </div>
+                        <h2 class="cyber-title text-3xl sm:text-4xl font-black text-white mb-4">
+                            Enter Me Pro Console + <span class="text-neonBlue">USB Quantum Pack</span>
+                        </h2>
+                        <p class="text-gray-400 text-sm sm:text-base mb-6">
+                            Includes the Enter Me Console hardware unit, tactical haptic controller, 4TB Quantum USB Expansion Drive pre-loaded with setup utilities, and 1-Year VIP Support.
+                        </p>
+
+                        <!-- Price Tag -->
+                        <div class="flex items-baseline gap-4 mb-8">
+                            <span class="cyber-title text-4xl sm:text-5xl font-black text-white">$499.00</span>
+                            <span class="text-gray-500 line-through text-lg">$699.00</span>
+                            <span class="px-2.5 py-1 rounded-md bg-neonGreen/10 text-neonGreen font-mono text-xs border border-neonGreen/30">Save $200 (Launch Special)</span>
+                        </div>
+
+                        <!-- Express Checkout Payment Gateways -->
+                        <div class="space-y-4">
+                            <p class="text-xs font-mono text-gray-400 uppercase tracking-wider">Select Express Checkout Gateway:</p>
+                            
+                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                                <!-- PayTabs Checkout Link (Configurable in code) -->
+                                <a href="https://secure.paytabs.com/payment/link" target="_blank" rel="noopener noreferrer" class="flex items-center justify-center gap-2 py-3 px-4 bg-cyberDark hover:bg-cyberBorder border border-cyberBorder rounded-xl text-white font-cyber text-xs transition-all">
+                                    <i class="fa-solid fa-credit-card text-neonBlue"></i> PayTabs
+                                </a>
+                                <!-- HBL Checkout Link -->
+                                <a href="https://www.hbl.com/paymentgateway" target="_blank" rel="noopener noreferrer" class="flex items-center justify-center gap-2 py-3 px-4 bg-cyberDark hover:bg-cyberBorder border border-cyberBorder rounded-xl text-white font-cyber text-xs transition-all">
+                                    <i class="fa-solid fa-building-columns text-neonPurple"></i> HBL Direct
+                                </a>
+                                <!-- Apple Pay / Card -->
+                                <a href="https://pay.apple.com" target="_blank" rel="noopener noreferrer" class="flex items-center justify-center gap-2 py-3 px-4 bg-cyberDark hover:bg-cyberBorder border border-cyberBorder rounded-xl text-white font-cyber text-xs transition-all">
+                                    <i class="fa-brands fa-apple text-white text-base"></i> Apple Pay
+                                </a>
+                            </div>
+
+                            <p class="text-[11px] text-gray-500 text-center sm:text-left mt-2">
+                                <i class="fa-solid fa-shield-halved text-neonGreen mr-1"></i> Secured 256-Bit Encrypted Checkout. Instant tracking provided.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Product Showcase Video / Image Feature -->
+                    <div class="space-y-4">
+                        <div class="relative rounded-2xl bg-cyberDark border border-cyberBorder overflow-hidden aspect-video flex items-center justify-center">
+                            <img src="https://placehold.co/800x450/12131a/b000ff?text=USB+QUANTUM+PACK+INCLUDED" onerror="this.src='https://placehold.co/800x450/12131a/b000ff?text=USB+Pack'" alt="USB Pack" class="w-full h-full object-cover">
+                            <button onclick="openVideoModal('https://www.youtube.com/embed/dQw4w9WgXcQ', 'Unboxing & USB Quantum Pack Overview')" class="absolute inset-0 bg-black/40 flex items-center justify-center hover:bg-black/20 transition-all">
+                                <div class="w-16 h-16 rounded-full bg-neonPurple text-white flex items-center justify-center text-xl shadow-neon-purple transform hover:scale-110 transition-transform">
+                                    <i class="fa-solid fa-play ml-1"></i>
+                                </div>
+                            </button>
+                        </div>
+                        <div class="grid grid-cols-2 gap-3 text-xs text-gray-300 font-mono">
+                            <div class="p-3 bg-cyberDark rounded-xl border border-cyberBorder flex items-center gap-2">
+                                <i class="fa-solid fa-truck-fast text-neonBlue"></i> Free Express Shipping
+                            </div>
+                            <div class="p-3 bg-cyberDark rounded-xl border border-cyberBorder flex items-center gap-2">
+                                <i class="fa-solid fa-rotate-left text-neonGreen"></i> 30-Day Money Back
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- PLAYER SETUP & GUIDES SECTION              -->
+        <!-- ========================================== -->
+        <section id="guides" class="py-20 bg-cyberDarker border-y border-cyberBorder">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <!-- Section Header -->
+                <div class="text-center max-w-3xl mx-auto mb-16">
+                    <div class="inline-block px-3 py-1 rounded-full bg-cyberCard border border-cyberBorder text-neonBlue text-xs font-mono mb-3">
+                        MASTERCLASSES & MANUALS
+                    </div>
+                    <h2 class="cyber-title text-2xl sm:text-4xl font-black text-white">
+                        Player & Setup: Everything You Need to Master Your New Console Instantly
+                    </h2>
+                    <p class="text-gray-400 text-sm mt-2">Follow our comprehensive video and written guides for seamless onboarding.</p>
+                </div>
+
+                <!-- Two Distinct Guide Blocks -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    
+                    <!-- Guide Block 1: How to Get Games -->
+                    <div class="bg-cyberCard border border-cyberBorder rounded-3xl p-8 flex flex-col justify-between hover:border-neonBlue transition-all shadow-lg">
+                        <div>
+                            <div class="flex items-center justify-between mb-6">
+                                <div class="w-12 h-12 rounded-2xl bg-cyberDark border border-cyberBorder flex items-center justify-center text-neonBlue">
+                                    <i class="fa-solid fa-gamepad text-xl"></i>
+                                </div>
+                                <span class="px-3 py-1 bg-neonBlue/10 text-neonBlue font-mono text-xs rounded-full border border-neonBlue/30">Step 01</span>
+                            </div>
+                            
+                            <h3 class="cyber-title text-2xl font-bold text-white mb-4">How to Get Games</h3>
+                            <p class="text-gray-400 text-sm mb-6 leading-relaxed">
+                                Access our verified game library domain to download compatible titles. Transfer downloaded game files onto your formatted USB drive using any standard file manager. Ensure file directory matches console firmware standard protocols.
+                            </p>
+
+                            <!-- Written Steps Checklist -->
+                            <ul class="space-y-3 text-xs sm:text-sm text-gray-300 font-medium mb-8">
+                                <li class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-neonBlue"></i> Visit official game repository domain.</li>
+                                <li class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-neonBlue"></i> Select your title and download packages.</li>
+                                <li class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-neonBlue"></i> Extract files onto the provided USB drive root folder.</li>
+                            </ul>
+                        </div>
+
+                        <!-- Video Tutorial Slot / Modal Trigger -->
+                        <div class="pt-6 border-t border-cyberBorder flex items-center justify-between">
+                            <span class="text-xs text-gray-400 font-mono"><i class="fa-solid fa-video text-neonBlue mr-1"></i> Video Tutorial Available</span>
+                            <button onclick="openVideoModal('https://www.youtube.com/embed/dQw4w9WgXcQ', 'How to Get Games Tutorial')" class="px-5 py-2.5 bg-cyberDark border border-neonBlue text-neonBlue hover:bg-neonBlue hover:text-cyberDark font-cyber text-xs uppercase tracking-wider rounded-xl transition-all">
+                                Watch Guide
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Guide Block 2: How to Set Up Games on Console -->
+                    <div class="bg-cyberCard border border-cyberBorder rounded-3xl p-8 flex flex-col justify-between hover:border-neonPurple transition-all shadow-lg">
+                        <div>
+                            <div class="flex items-center justify-between mb-6">
+                                <div class="w-12 h-12 rounded-2xl bg-cyberDark border border-cyberBorder flex items-center justify-center text-neonPurple">
+                                    <i class="fa-solid fa-sliders text-xl"></i>
+                                </div>
+                                <span class="px-3 py-1 bg-neonPurple/10 text-neonPurple font-mono text-xs rounded-full border border-neonPurple/30">Step 02</span>
+                            </div>
+                            
+                            <h3 class="cyber-title text-2xl font-bold text-white mb-4">How to Set Up Games on Console</h3>
+                            <p class="text-gray-400 text-sm mb-6 leading-relaxed">
+                                Insert the prepared USB drive into the Enter Me console USB port. Power on the device. Navigate to the Library Manager on the dashboard and execute the auto-installer utility to sync titles.
+                            </p>
+
+                            <!-- Written Steps Checklist -->
+                            <ul class="space-y-3 text-xs sm:text-sm text-gray-300 font-medium mb-8">
+                                <li class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-neonPurple"></i> Plug USB drive into the back high-speed port.</li>
+                                <li class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-neonPurple"></i> Power on console and wait for boot prompt.</li>
+                                <li class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-neonPurple"></i> Run automatic installer & verify game icons.</li>
+                            </ul>
+                        </div>
+
+                        <!-- Video Tutorial Slot / Modal Trigger -->
+                        <div class="pt-6 border-t border-cyberBorder flex items-center justify-between">
+                            <span class="text-xs text-gray-400 font-mono"><i class="fa-solid fa-video text-neonPurple mr-1"></i> Video Tutorial Available</span>
+                            <button onclick="openVideoModal('https://www.youtube.com/embed/dQw4w9WgXcQ', 'How to Set Up Games on Console Tutorial')" class="px-5 py-2.5 bg-cyberDark border border-neonPurple text-neonPurple hover:bg-neonPurple hover:text-cyberDark font-cyber text-xs uppercase tracking-wider rounded-xl transition-all">
+                                Watch Guide
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- SUPPORT, POLICIES & FORMSPREE CONTACT SECTION -->
+        <!-- ========================================== -->
+        <section id="support" class="py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                
+                <!-- Left Column: Policies & Support Information -->
+                <div class="space-y-8">
+                    <div>
+                        <div class="inline-block px-3 py-1 rounded-full bg-cyberCard border border-cyberBorder text-neonGreen text-xs font-mono mb-3">
+                            POLICIES & GUIDELINES
+                        </div>
+                        <h2 class="cyber-title text-3xl font-black text-white">Support & Customer Policies</h2>
+                        <p class="text-gray-400 text-sm mt-2">Transparent policies ensuring total peace of mind for our gaming community.</p>
+                    </div>
+
+                    <!-- Policy 1: Return & Refund -->
+                    <div class="bg-cyberCard border border-cyberBorder p-6 rounded-2xl">
+                        <h3 class="cyber-title text-lg font-bold text-white mb-2 flex items-center gap-2">
+                            <i class="fa-solid fa-rotate-left text-neonBlue"></i> Return & Refund Policy
+                        </h3>
+                        <p class="text-gray-400 text-sm leading-relaxed">
+                            We offer a 30-day money-back guarantee on all unopened and factory-sealed console units. If you encounter any hardware malfunction, our VIP support team will instantly replace your unit under warranty.
+                        </p>
+                    </div>
+
+                    <!-- Policy 2: Shipping & Delivery -->
+                    <div class="bg-cyberCard border border-cyberBorder p-6 rounded-2xl">
+                        <h3 class="cyber-title text-lg font-bold text-white mb-2 flex items-center gap-2">
+                            <i class="fa-solid fa-truck-fast text-neonPurple"></i> Shipping & Delivery Information
+                        </h3>
+                        <p class="text-gray-400 text-sm leading-relaxed">
+                            All orders are dispatched within 24 hours via priority air couriers. Standard global delivery takes 3 to 5 business days. Tracking details are emailed automatically upon dispatch.
+                        </p>
+                    </div>
+
+                    <!-- Policy 3: Terms of Service -->
+                    <div class="bg-cyberCard border border-cyberBorder p-6 rounded-2xl">
+                        <h3 class="cyber-title text-lg font-bold text-white mb-2 flex items-center gap-2">
+                            <i class="fa-solid fa-file-contract text-neonGreen"></i> Terms of Service
+                        </h3>
+                        <p class="text-gray-400 text-sm leading-relaxed">
+                            By purchasing and operating the Enter Me console, users agree to abide by our firmware licensing agreement and intellectual property guidelines. Unauthorized firmware modification voids warranty.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Right Column: Formspree Contact Us Form -->
+                <div id="contact" class="bg-cyberCard border border-cyberBorder p-8 sm:p-10 rounded-3xl shadow-glow-lg flex flex-col justify-between">
+                    <div>
+                        <div class="inline-block px-3 py-1 rounded-full bg-cyberDark border border-cyberBorder text-neonBlue text-xs font-mono mb-3">
+                            DIRECT INQUIRY
+                        </div>
+                        <h2 class="cyber-title text-2xl sm:text-3xl font-black text-white mb-2">Contact Us</h2>
+                        <p class="text-gray-400 text-sm mb-8">Have questions about your order or setup? Drop us a message below.</p>
+
+                        <!-- Formspree Integration Form -->
+                        <!-- NOTE: Replace YOUR_FORMSPREE_ENDPOINT with your actual Formspree form ID/endpoint URL -->
+                        <form action="https://formspree.io/f/YOUR_FORMSPREE_ENDPOINT" method="POST" class="space-y-6">
+                            <div>
+                                <label class="block text-xs font-mono text-gray-300 uppercase tracking-wider mb-2">Your Name</label>
+                                <input type="text" name="name" required placeholder="Alex Mercer" class="w-full px-4 py-3 bg-cyberDark border border-cyberBorder rounded-xl text-white placeholder-gray-600 focus:border-neonBlue focus:outline-none transition-colors text-sm">
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-mono text-gray-300 uppercase tracking-wider mb-2">Your Email Address</label>
+                                <input type="email" name="email" required placeholder="alex@cyberpunk.io" class="w-full px-4 py-3 bg-cyberDark border border-cyberBorder rounded-xl text-white placeholder-gray-600 focus:border-neonBlue focus:outline-none transition-colors text-sm">
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-mono text-gray-300 uppercase tracking-wider mb-2">Your Message</label>
+                                <textarea name="message" rows="4" required placeholder="How can we assist you with your setup?" class="w-full px-4 py-3 bg-cyberDark border border-cyberBorder rounded-xl text-white placeholder-gray-600 focus:border-neonBlue focus:outline-none transition-colors text-sm resize-none"></textarea>
+                            </div>
+
+                            <button type="submit" class="w-full py-4 bg-gradient-to-r from-neonBlue to-neonPurple text-cyberDark font-cyber font-black text-sm uppercase tracking-wider rounded-xl shadow-neon-blue hover:opacity-95 transition-all">
+                                <i class="fa-solid fa-paper-plane mr-2"></i> Send Inquiry
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Direct Support Email Info -->
+                    <div class="mt-8 pt-6 border-t border-cyberBorder text-center text-xs text-gray-400 font-mono">
+                        Direct VIP Support: <a href="mailto:support@enterme-console.com" class="text-neonBlue hover:underline">support@enterme-console.com</a>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+    </main>
+
+    <!-- ========================================== -->
+    <!-- FOOTER                                     -->
+    <!-- ========================================== -->
+    <footer class="bg-cyberDarker border-t border-cyberBorder py-12 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6 text-center md:text-left">
+            <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-neonBlue to-neonPurple p-0.5 flex items-center justify-center">
+                    <div class="w-full h-full bg-cyberDark rounded-[6px] flex items-center justify-center">
+                        <i class="fa-solid fa-gamepad text-neonBlue text-xs"></i>
+                    </div>
+                </div>
+                <span class="cyber-title font-black text-lg tracking-wider text-white">ENTER ME</span>
+            </div>
+
+            <p class="text-xs text-gray-500 font-mono">
+                &copy; 2026 Enter Me Gaming Brand. All rights reserved. Engineered for elite performance.
+            </p>
+
+            <div class="flex items-center gap-4 text-gray-400">
+                <a href="#" class="hover:text-neonBlue transition-colors"><i class="fa-brands fa-twitter text-lg"></i></a>
+                <a href="#" class="hover:text-neonBlue transition-colors"><i class="fa-brands fa-discord text-lg"></i></a>
+                <a href="#" class="hover:text-neonBlue transition-colors"><i class="fa-brands fa-youtube text-lg"></i></a>
+                <a href="#" class="hover:text-neonBlue transition-colors"><i class="fa-brands fa-github text-lg"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ========================================== -->
+    <!-- WHATSAPP FLOATING SUPPORT BUTTON           -->
+    <!-- ========================================== -->
+    <a href="https://wa.me/1234567890?text=Hello%20Enter%20Me%20Support,%20I%20need%20help%20with%20my%20console%20order." target="_blank" rel="noopener noreferrer" class="fixed bottom-6 right-6 z-50 w-14 h-14 bg-gradient-to-br from-[#25d366] to-[#128c7e] text-white rounded-full flex items-center justify-center text-2xl shadow-[0_0_25px_rgba(37,211,102,0.6)] hover:scale-110 transition-transform group" title="Chat on WhatsApp">
+        <i class="fa-brands fa-whatsapp"></i>
+        <!-- Tooltip Label -->
+        <span class="absolute right-16 bg-cyberCard border border-cyberBorder text-white text-xs px-3 py-1.5 rounded-xl shadow-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap font-medium pointer-events-none">
+            Need Help? Chat on WhatsApp
+        </span>
+    </a>
+
+    <!-- ========================================== -->
+    <!-- VIDEO TUTORIAL MODAL POPUP                 -->
+    <!-- ========================================== -->
+    <div id="video-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden items-center justify-center p-4">
+        <div class="bg-cyberCard border border-cyberBorder rounded-3xl w-full max-w-4xl overflow-hidden shadow-2xl relative">
+            <div class="flex items-center justify-between p-4 border-b border-cyberBorder bg-cyberDarker">
+                <h3 id="modal-title" class="cyber-title text-sm font-bold text-white">Console Video Guide</h3>
+                <button onclick="closeVideoModal()" class="w-8 h-8 rounded-xl bg-cyberCard border border-cyberBorder text-gray-400 hover:text-white flex items-center justify-center transition-all">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <div class="aspect-video w-full bg-black relative">
+                <iframe id="modal-iframe" src="" class="w-full h-full" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- JAVASCRIPT LOGIC & INTERACTION CONTROLS    -->
+    <!-- ========================================== -->
+    <script>
+        
+        // Mobile Menu Toggle
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // Close mobile menu when a link is clicked
+        mobileMenu.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
+            });
+        });
+
+        // USB Plug-in Splash Screen Boot Simulation
+        const splashScreen = document.getElementById('splash-screen');
+        const splashProgress = document.getElementById('splash-progress');
+        const splashStatus = document.getElementById('splash-status');
+
+        const bootMessages = [
+            "Initializing Quantum SSD & Peripheral Link...",
+            "Detecting USB Drive Partition...",
+            "Loading Cyberpunk Neural Firmware v4.5...",
+            "Calibrating 120 FPS Display Matrix...",
+            "System Boot Complete. Welcome Gamer."
+        ];
+
+        let progress = 0;
+        const bootInterval = setInterval(() => {
+            progress += 2;
+            if (splashProgress) {
+                splashProgress.style.width = progress + '%';
+            }
+            
+            let msgIndex = Math.floor((progress / 100) * bootMessages.length);
+            if (msgIndex >= bootMessages.length) msgIndex = bootMessages.length - 1;
+            if (splashStatus) {
+                splashStatus.textContent = bootMessages[msgIndex];
+            }
+
+            if (progress >= 100) {
+                clearInterval(bootInterval);
+                setTimeout(dismissSplash, 400);
+            }
+        }, 35);
+
+        function dismissSplash() {
+            if (splashScreen) {
+                splashScreen.style.opacity = '0';
+                setTimeout(() => {
+                    splashScreen.style.display = 'none';
+                }, 700);
+            }
+        }
+
+        function triggerSplashAgain() {
+            if (splashScreen) {
+                splashScreen.style.display = 'flex';
+                splashScreen.style.opacity = '1';
+                progress = 0;
+                if (splashProgress) splashProgress.style.width = '0%';
+            }
+        }
+
+        // Video Modal Controller
+        const videoModal = document.getElementById('video-modal');
+        const modalIframe = document.getElementById('modal-iframe');
+        const modalTitle = document.getElementById('modal-title');
+
+        function openVideoModal(url, title) {
+            if (modalIframe && videoModal && modalTitle) {
+                modalIframe.src = url;
+                modalTitle.textContent = title;
+                videoModal.classList.remove('hidden');
+                videoModal.classList.add('flex');
+            }
+        }
+
+        function closeVideoModal() {
+            if (modalIframe && videoModal) {
+                modalIframe.src = '';
+                videoModal.classList.remove('flex');
+                videoModal.classList.add('hidden');
+            }
+        }
+
+        // Close modal on outside click
+        window.addEventListener('click', (e) => {
+            if (e.target === videoModal) {
+                closeVideoModal();
+            }
+        });
+    </script>
+</body>
+</html>
